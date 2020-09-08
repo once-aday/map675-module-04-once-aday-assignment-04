@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Display a map</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+<!-- request styles -->
+<link href='https://github.com/lukasmartinelli/mapbox-gl-inspect/releases/download/v1.3.1/mapbox-gl-inspect.css' rel='stylesheet' />
+
+
+<!-- request js -->
+<script src='https://github.com/lukasmartinelli/mapbox-gl-inspect/releases/download/v1.3.1/mapbox-gl-inspect.js'></script>
+<style>
+	body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+  mapboxgl.accessToken = 'pk.eyJ1Ijoicm9jay1vbiIsImEiOiJjazdmamdqM2swM2tiM2RzMTVzZHo0azE4In0.R7p1gm6-ACCcAzC68BfdXw';
+
+
+  const map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/mapbox/dark-v9', // style URL
+    center: [76.40086, 9.50512], // starting position [lng, lat]
+    zoom: 10 // starting zoom
+  });
+
+  map.addControl(new MapboxInspect());
+
+  map.on('load', function() {
+  map.addSource('kl_india', {  // pop-places refereces to the source requested here
+      type: 'vector',
+      url: 'mapbox://rock-on.7udmc6um'  // update with your mapboxo username and the tileset ID
+  })
+
+  map.addLayer({
+        'id': 'kl_india_id',  // provide an id for later reference
+        'type': 'fill',
+        'source': 'kl_india',  // refers to the source name we entered above
+        'source-layer': 'kl_india-bm07ho',  // refers to the name of the tileset hosted on Mapbox Studio
+        'paint': {
+            "fill-color": "#ff69b4",
+						"fill-outline-color": "hsl(211, 75%, 53%)"
+        }
+    });
+
+    map.addLayer({
+       "id": "kl_india_id_labels",
+       "type": "symbol",
+       'source': 'kl_india',
+       "source-layer": "kl_india-bm07ho",
+       "layout": {
+           "text-field": "{NAME}",
+           // "text-justify": "left",
+           // "text-anchor": "bottom-left",
+           // "text-offset": [.5, -.3],
+           "text-size": 12
+       },
+       "paint": {
+           "text-color": "hsl(211, 75%, 100%)"
+       }
+   });
+  });
+
+  // map.on('mouseenter', 'kl_india_id', function(e) {
+	//
+  //   let features = map.queryRenderedFeatures(e.point);
+	//
+  //   console.log(features);
+	//
+  // });
+	//
+  // // Create a popup, but don't add it to the map yet.
+  // const popup = new mapboxgl.Popup({
+  //   closeButton: false,
+  //   closeOnClick: false
+  // });
+	//
+  // map.on('mouseenter', 'kl_india_id', function (e) {
+	//
+  //   const features = map.queryRenderedFeatures(e.point);
+	// 	console.log(features[0].properties)
+	//
+  //   // Change the cursor style as a UI affordance.
+  //   map.getCanvas().style.cursor = 'pointer';
+	//
+  //   // Populate the popup and set its coordinates
+  //   // based on the feature found.
+	//
+  //   const coordinates = e.features[0].geometry.coordinates[0][0];
+  //   const name = e.features[0].properties.NAME;
+	//
+  //   popup
+  //     .setLngLat(coordinates)
+  //     .setHTML("Name: " + name.toLocaleString())
+  //     .addTo(map);
+  // });
+	//
+  // map.on('mouseleave', 'kl_india_id', function () {
+  //   map.getCanvas().style.cursor = '';
+  //   popup.remove();
+  // });
+
+
+</script>
+
+</body>
+</html>
